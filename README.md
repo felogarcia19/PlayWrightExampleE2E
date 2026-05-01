@@ -1,4 +1,4 @@
-# Prelude Electronics — End-to-End Test Suite
+# Prelude Electronics - End-to-End Test Suite
 
 Automated browser tests for [preludeelectronics.com](https://preludeelectronics.com), built with **Playwright** and **TypeScript**.
 
@@ -20,7 +20,7 @@ Every page of the live website is covered:
 | `audio.spec.ts` | Tagline, quote, speakers, crossovers, and amplifier listings |
 | `electronics.spec.ts` | Quote, category labels (Audio / Power / Communication / Controllers) |
 | `software.spec.ts` | Philosophy quote, policies, and application areas |
-| `contact.spec.ts` | Location, emails (including `mailto:` href), phone, hours, and Instagram link |
+| `contact.spec.ts` | Location, emails, phone, hours, and Instagram link |
 
 Tests run on **5 browser/device configurations**: Chromium, Firefox, WebKit, Mobile Chrome, and Mobile Safari.
 
@@ -30,37 +30,37 @@ Tests run on **5 browser/device configurations**: Chromium, Firefox, WebKit, Mob
 
 This project follows modern QA engineering patterns:
 
-```
+```text
 e2e/
-├── fixtures/
-│   └── index.ts          ← Custom Playwright fixtures (inject page objects into tests)
-│
-├── pages/                ← Page Object Model — all selectors and locators live here
-│   ├── BasePage.ts       ← Shared helpers: nav, footer, text(), heading(), goto()
-│   ├── NavigationPage.ts
-│   ├── HomePage.ts
-│   ├── AboutPage.ts
-│   ├── AudioPage.ts
-│   ├── ElectronicsPage.ts
-│   ├── SoftwarePage.ts
-│   └── ContactPage.ts
-│
-├── data/                 ← Test data — all text, URLs, and patterns live here
-│   ├── navigation.data.ts
-│   ├── homepage.data.ts
-│   ├── about.data.ts
-│   ├── audio.data.ts
-│   ├── electronics.data.ts
-│   ├── software.data.ts
-│   └── contact.data.ts
-│
-├── navigation.spec.ts    ← Spec files — only Playwright assertions, zero raw strings
-├── homepage.spec.ts
-├── about.spec.ts
-├── audio.spec.ts
-├── electronics.spec.ts
-├── software.spec.ts
-└── contact.spec.ts
+|-- fixtures/
+|   \-- index.ts          <- Custom Playwright fixtures (inject page objects into tests)
+|
+|-- pages/                <- Page Object Model - all selectors and locators live here
+|   |-- BasePage.ts       <- Shared helpers: nav, footer, text(), heading(), goto()
+|   |-- NavigationPage.ts
+|   |-- HomePage.ts
+|   |-- AboutPage.ts
+|   |-- AudioPage.ts
+|   |-- ElectronicsPage.ts
+|   |-- SoftwarePage.ts
+|   \-- ContactPage.ts
+|
+|-- data/                 <- Test data - all text, URLs, and patterns live here
+|   |-- navigation.data.ts
+|   |-- homepage.data.ts
+|   |-- about.data.ts
+|   |-- audio.data.ts
+|   |-- electronics.data.ts
+|   |-- software.data.ts
+|   \-- contact.data.ts
+|
+|-- navigation.spec.ts    <- Spec files - only Playwright assertions, zero raw strings
+|-- homepage.spec.ts
+|-- about.spec.ts
+|-- audio.spec.ts
+|-- electronics.spec.ts
+|-- software.spec.ts
+\-- contact.spec.ts
 ```
 
 ### Three-layer design
@@ -73,10 +73,9 @@ e2e/
 
 ### Custom fixtures
 
-Page objects are registered as Playwright fixtures so tests receive them already instantiated — no `new SomePage(page)` or `beforeEach` boilerplate required:
+Page objects are registered as Playwright fixtures so tests receive them already instantiated:
 
 ```typescript
-// Every test in the suite looks like this ↓
 test('contact info is displayed', async ({ contactPage }) => {
   await expect(contactPage.text(contactData.contact.primaryEmail)).toBeVisible();
 });
@@ -96,8 +95,8 @@ test('contact info is displayed', async ({ contactPage }) => {
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
-cd YOUR_REPO/Playwright
+git clone https://github.com/felogarcia19/PlayWrightExampleE2E.git
+cd PlayWrightExampleE2E
 ```
 
 ### 2. Install dependencies
@@ -113,6 +112,7 @@ npx playwright install
 ```
 
 > On Linux / CI you may also need system dependencies:
+>
 > ```bash
 > npx playwright install --with-deps
 > ```
@@ -140,23 +140,33 @@ cp .env.example .env
 | `npm run test:firefox` | Run on Firefox only |
 | `npm run test:webkit` | Run on WebKit (Safari engine) only |
 | `npm run test:mobile` | Run on Mobile Chrome + Mobile Safari |
-| `npm run test:report` | Open the last HTML report |
+| `npm run test:report` | Open the last Playwright HTML report |
+| `npm run allure:generate` | Build Allure report from allure-results |
+| `npm run allure:open` | Open generated Allure report |
+| `npm run allure:run` | Run tests, generate Allure report, and open it |
 | `npm run codegen` | Launch Playwright Codegen to record new tests |
 
 ---
 
 ## Viewing results
 
-After each run an **HTML report** is generated automatically. Open it with:
+Playwright report:
 
 ```bash
 npm run test:report
 ```
 
+Allure report:
+
+```bash
+npm run allure:generate
+npm run allure:open
+```
+
 Failed tests automatically save:
-- A **screenshot** at the moment of failure
-- A **video** recording of the full test run
-- A **trace file** (on retry) — viewable at [trace.playwright.dev](https://trace.playwright.dev)
+- A screenshot at the moment of failure
+- A video recording of the full test run
+- A trace file (on retry), viewable at [trace.playwright.dev](https://trace.playwright.dev)
 
 ---
 
@@ -167,8 +177,9 @@ The project includes a ready-to-use GitHub Actions workflow at `.github/workflow
 On every push or pull request to `main` / `master`:
 1. Dependencies are installed via `npm ci`
 2. Playwright browsers are downloaded
-3. Tests run in **parallel** across Chromium, Firefox, and WebKit
-4. HTML reports are uploaded as artifacts (retained 30 days)
+3. Tests run in parallel across Chromium, Firefox, and WebKit
+4. Playwright and Allure artifacts are uploaded
+5. Allure report history is preserved between runs
 
 To target a different URL in CI, add a repository secret named `BASE_URL`.
 
@@ -181,4 +192,5 @@ To target a different URL in CI, add a repository secret named `BASE_URL`.
 | [Playwright](https://playwright.dev/) | Browser automation and test runner |
 | [TypeScript](https://www.typescriptlang.org/) | Type-safe test code |
 | [dotenv](https://github.com/motdotla/dotenv) | Environment-based configuration |
+| [Allure](https://allurereport.org/) | Rich test reporting with history trends |
 | [GitHub Actions](https://docs.github.com/en/actions) | Continuous integration pipeline |
