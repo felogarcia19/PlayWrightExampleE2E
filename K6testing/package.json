@@ -1,0 +1,31 @@
+{
+  "name": "k6testing",
+  "version": "1.0.0",
+  "description": "K6 load and performance testing for preludeelectronics.com",
+  "type": "module",
+  "scripts": {
+    "test": "k6 run src/scenarios/smokeTest.js",
+    "test:load": "k6 run src/scenarios/loadTest.js",
+    "test:stress": "k6 run src/scenarios/stressTest.js",
+    "test:spike": "k6 run src/scenarios/spikeTest.js",
+    "test:local": "k6 run --vus 1 --duration 10s src/scenarios/smokeTest.js",
+    "lint": "eslint src/",
+    "format": "prettier --write \"src/**/*.js\""
+  },
+  "keywords": [
+    "k6",
+    "performance",
+    "load-testing",
+    "stress-testing",
+    "prelude"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
