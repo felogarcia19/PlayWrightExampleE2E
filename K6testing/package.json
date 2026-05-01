@@ -9,6 +9,10 @@
     "test:stress": "k6 run src/scenarios/stressTest.js",
     "test:spike": "k6 run src/scenarios/spikeTest.js",
     "test:local": "k6 run --vus 1 --duration 10s src/scenarios/smokeTest.js",
+    "test:json": "k6 run --out json=results.json src/scenarios/smokeTest.js",
+    "test:load:json": "k6 run --out json=results.json src/scenarios/loadTest.js",
+    "test:stress:json": "k6 run --out json=results.json src/scenarios/stressTest.js",
+    "test:spike:json": "k6 run --out json=results.json src/scenarios/spikeTest.js",
     "lint": "eslint src/",
     "format": "prettier --write \"src/**/*.js\""
   },
@@ -25,6 +29,7 @@
     "eslint": "^8.0.0",
     "prettier": "^3.0.0"
   },
+  "description": "K6 load and performance testing for preludeelectronics.com with POM architecture and JSON result export".
   "engines": {
     "node": ">=18.0.0"
   }
