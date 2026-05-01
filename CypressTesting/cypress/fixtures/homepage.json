@@ -1,0 +1,8 @@
+{
+  "url": "/",
+  "titleIncludes": "Home",
+  "headings": ["Audio Engineering", "Software Engineering", "Electronics Engineering"],
+  "audioItems": ["Active speakers", "Passive speakers", "Two-way systems"],
+  "softwareItems": ["Automation Systems", "Web Development", "System Architecture"],
+  "electronicsItems": ["Power Electronics", "Communication Systems", "Control Systems"]
+}
