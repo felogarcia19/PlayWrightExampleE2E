@@ -1,0 +1,119 @@
+name: Playwright E2E Tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+  # Allow manual runs from the GitHub Actions tab
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    name: E2E (${{ matrix.project }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false        # let all browsers finish even if one fails
+      matrix:
+        project: [chromium, firefox, webkit]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps ${{ matrix.project }}
+
+      - name: Run Playwright tests (${{ matrix.project }})
+        run: npx playwright test --project=${{ matrix.project }}
+        env:
+          CI: true
+          BASE_URL: ${{ secrets.BASE_URL || 'https://preludeelectronics.com' }}
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        if: always()          # upload even when tests fail
+        with:
+          name: playwright-report-${{ matrix.project }}
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload Allure results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results-${{ matrix.project }}
+          path: allure-results/
+          retention-days: 30
+
+  allure-report:
+    name: Generate Allure Report
+    runs-on: ubuntu-latest
+    needs: e2e
+    if: always()
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Download previous Allure report to restore history trend data
+      - name: Download previous Allure report (for history)
+        uses: dawidd6/action-download-artifact@v6
+        continue-on-error: true   # first run has no prior report — that's fine
+        with:
+          name: allure-report
+          path: allure-report/
+
+      # Merge all browser results into a single allure-results folder
+      - name: Download Allure results (chromium)
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results-chromium
+          path: allure-results/
+
+      - name: Download Allure results (firefox)
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results-firefox
+          path: allure-results/
+
+      - name: Download Allure results (webkit)
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results-webkit
+          path: allure-results/
+
+      # Copy history from old report into allure-results so trends appear
+      - name: Preserve Allure history
+        run: node scripts/preserve-allure-history.js
+
+      - name: Generate Allure report
+        run: npx allure generate allure-results --clean -o allure-report
+
+      - name: Upload combined Allure report
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report/
+          retention-days: 90
+
