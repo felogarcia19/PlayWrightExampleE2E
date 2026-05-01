@@ -1,0 +1,9 @@
+{
+  "url": "/",
+  "titleIncludes": "Home",
+  "menuItems": ["Home", "Software", "Electronics", "Audio", "Contact", "About"],
+  "urls": {
+    "about": "/about/",
+    "contact": "/159-2/"
+  }
+}
