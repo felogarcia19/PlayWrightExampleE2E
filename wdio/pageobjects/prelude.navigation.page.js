@@ -2,7 +2,7 @@ const BasePage = require('./base.page');
 
 class PreludeNavigationPage extends BasePage {
   get homeLink() {
-    return $('a[href*="/" i], a:contains("Home")');
+    return $('//a[contains(@href, "/")] | //a[contains(text(), "Home")]');
   }
 
   get audioLink() {
@@ -26,6 +26,9 @@ class PreludeNavigationPage extends BasePage {
   }
 
   async navigateToMenu(menuName) {
+    // On mobile, need to open the menu first
+    await this.openMobileMenuIfAvailable();
+
     const linkMap = {
       audio: this.audioLink,
       electronics: this.electronicsLink,

@@ -2,7 +2,7 @@ const BasePage = require('./base.page');
 
 class PreludeContactPage extends BasePage {
   get contactHeading() {
-    return $('h1, h2, [class*="heading" i]:contains("Contact")');
+    return $('//h1 | //h2[contains(text(), "Contact")] | //*[@class and contains(@class, "heading") and contains(text(), "Contact")]');
   }
 
   get emailLink() {

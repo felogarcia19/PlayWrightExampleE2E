@@ -6,15 +6,18 @@ class PreludeServicesPage extends BasePage {
   }
 
   get audioServiceSection() {
-    return $('[class*="audio" i], a[href*="audio" i]');
+    // Look for Audio Engineering heading using XPath text matching
+    return $('//h3[contains(text(), "Audio")] | //h2[contains(text(), "Audio")] | //*[contains(@class, "audio")]');
   }
 
   get electronicsServiceSection() {
-    return $('[class*="electronics" i], a[href*="electronics" i]');
+    // Look for Electronics Engineering heading using XPath text matching
+    return $('//h3[contains(text(), "Electronics")] | //h2[contains(text(), "Electronics")] | //*[contains(@class, "electronics")]');
   }
 
   get softwareServiceSection() {
-    return $('[class*="software" i], a[href*="software" i]');
+    // Look for Software Engineering heading using XPath text matching
+    return $('//h3[contains(text(), "Software")] | //h2[contains(text(), "Software")] | //*[contains(@class, "software")]');
   }
 
   async countServiceCards() {
@@ -43,6 +46,8 @@ class PreludeServicesPage extends BasePage {
       throw new Error(`Unknown service section: ${sectionName}`);
     }
 
+    // Scroll section into view if it exists
+    await section.scrollIntoView();
     await expect(section).toBeDisplayed();
   }
 }

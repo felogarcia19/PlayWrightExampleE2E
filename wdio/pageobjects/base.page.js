@@ -1,4 +1,8 @@
 class BasePage {
+  get mobileMenuToggle() {
+    return $('button[aria-label*="menu" i], .menu-toggle, .navbar-toggler, .hamburger');
+  }
+
   async open(path = '/') {
     await browser.url(path);
   }
@@ -36,6 +40,17 @@ class BasePage {
         }
       }
     }
+  }
+
+  async openMobileMenuIfAvailable() {
+    if (await this.mobileMenuToggle.isExisting()) {
+      await this.mobileMenuToggle.waitForDisplayed({ timeout: 10000 });
+      await this.mobileMenuToggle.click();
+      await browser.pause(500); // Wait for menu animation
+      return true;
+    }
+
+    return false;
   }
 }
 
