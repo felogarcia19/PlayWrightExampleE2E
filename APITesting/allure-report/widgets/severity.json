@@ -1,0 +1,1 @@
+[{"uid":"300a11c46bbf3dd7","name":"GET /health returns service metadata","time":{"start":1777662832210,"stop":1777662832224,"duration":14},"status":"passed","severity":"normal"},{"uid":"951b42262cee49d6","name":"GET /api/site/summary returns modern smoke-check payload","time":{"start":1777662832210,"stop":1777662834966,"duration":2756},"status":"passed","severity":"normal"}]
